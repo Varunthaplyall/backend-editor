@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv").config();
 const { submitCode } = require("./utils");
+const { runInDocker } = require("./utils/dockerRunner");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -11,20 +12,21 @@ app.use(cors( {
 }));
 app.use(express.json());
 
-app.post("/submit", async (req, res)=>{
+app.post('/submit', async (req, res) => {
+    const { language_id, source_code, stdin } = req.body;
     console.log(req.body);
-    const data = req.body;
-    if (!data.language_id || !data.source_code) {
-        return res.status(400).json({ error: "language_id and source_code are required" });
+
+    if (!language_id || !source_code) {
+        return res.status(400).json({ error: "Missing fields" });
     }
+
     try {
-        const response = await submitCode(data);
-        res.json(response);
-        console.log(response);
-    } catch (error) {
-        console.log(error);
+        const result = await runInDocker({ language_id, source_code, stdin });
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
-})
+});
 
 app.listen(PORT, ()=>{
     console.log(`Server is running on port http://localhost:${PORT}`);
