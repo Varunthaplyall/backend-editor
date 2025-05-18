@@ -1,6 +1,6 @@
 const axios = require('axios');
-const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY
-const JUDGE0_API_URL = process.env.JUDGE0_API_URL
+const RAPIDAPI_KEY = "8a33d6cd94msh9624d30cddacf05p1a37b2jsnd28e067ee976"
+const JUDGE0_API_URL = "https://judge0-ce.p.rapidapi.com"
 
 const headers = {
     'x-rapidapi-key': RAPIDAPI_KEY,
